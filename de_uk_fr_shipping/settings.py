@@ -105,7 +105,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 403, 400]
 
 LOG_LEVEL = 'DEBUG'
-LOG_STDOUT = True
+LOG_STDOUT = False
 LOG_FILE = 'logs/{}.log'.format(strftime("%Y_%m_%dT%H%M%S"), gmtime())
 FEED_FORMAT = 'csv'
 FEED_URI = 'output/%(name)s_%(time)s.csv'

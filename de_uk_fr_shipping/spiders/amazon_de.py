@@ -25,8 +25,6 @@ class AmazonDeSpider(scrapy.Spider):
     )
 
     def start_requests(self):
-        # start_urls = []
-        # for url in start_urls:
             yield scrapy.Request(
                 DE_INIT_URL, self.parse_result,
                 headers=DE_HEADERS, meta={'dont_merge_cookies': True}
@@ -48,7 +46,7 @@ class AmazonDeSpider(scrapy.Spider):
             )
 
     def parse(self, response):
-        l = AmazonItemLoader(response=response)
+        l = AmzDeItemLoader(response=response)
         l.add_value('url', response.url)
         l.add_css('asin', '#prodDetails div.column.col2 td.value::text')
         l.add_css('description', '#productTitle.a-size-large::text')
