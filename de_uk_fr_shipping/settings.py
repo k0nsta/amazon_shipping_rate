@@ -15,13 +15,6 @@ BOT_NAME = 'de_uk_fr_shipping'
 SPIDER_MODULES = ['de_uk_fr_shipping.spiders']
 NEWSPIDER_MODULE = 'de_uk_fr_shipping.spiders'
 
-
-# SPLASH_URL = 'http://128.199.158.90:8051/'
-# SPLASH_URL = 'http://localhost:8050/'
-DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
-
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/603.3.8 (KHTML, like Gecko) Version/10.1.2 Safari/603.3.8'
 
@@ -112,7 +105,7 @@ AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
 RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 403, 400]
 
 LOG_LEVEL = 'DEBUG'
-# LOG_STDOUT = True
-# LOG_FILE = 'logs/{}.log'.format(strftime("%Y_%m_%dT%H%M%S"), gmtime())
+LOG_STDOUT = True
+LOG_FILE = 'logs/{}.log'.format(strftime("%Y_%m_%dT%H%M%S"), gmtime())
 FEED_FORMAT = 'csv'
 FEED_URI = 'output/%(name)s_%(time)s.csv'

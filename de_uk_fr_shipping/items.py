@@ -23,4 +23,3 @@ class DeUkFrShippingItem(scrapy.Item):
 class AmazonItemLoader(ItemLoader):
     default_item_class = DeUkFrShippingItem
     default_output_processor = Compose(TakeFirst(), six.text_type, six.text_type.strip)
-

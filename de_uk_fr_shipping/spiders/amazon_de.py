@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
-
 import scrapy
-from scrapy_splash import SplashRequest
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader.processors import Compose, TakeFirst
 
@@ -10,8 +7,7 @@ from de_uk_fr_shipping.items import AmazonItemLoader
 from de_uk_fr_shipping.helpers import get_from_proxyrotator
 from de_uk_fr_shipping.helpers import format_price
 
-from de_uk_fr_shipping.lua import DE_SHIPPING, LOAD_PAGE
-from de_uk_fr_shipping.cookies import DE_COOKIE, DE_HEADERS
+from de_uk_fr_shipping.constants import DE_INIT_URL, DE_HEADERS
 
 
 class AmzDeItemLoader(AmazonItemLoader):
@@ -28,43 +24,15 @@ class AmazonDeSpider(scrapy.Spider):
         restrict_css='#resultsCol', deny=[r'(b|B)estseller', r'.*(r|R)eviews.*', r'deal_dot.*']
     )
 
-    # def start_requests(self):
-    #     start_urls = ['https://www.amazon.de/s?marketplaceID=A1PA6795UKMFR9&me=A3C99XFET32HI1&merchant=A3C99XFET32HI1&redirect=true']
-    #     for url in start_urls:
-    #         yield SplashRequest(
-    #             url, self.parse_result, endpoint='execute',
-    #             args={'lua_source': LOAD_PAGE},
-    #         )
-
-    # def parse_result(self, response):
-    #     for l in self.lx_products.extract_links(response):
-    #         proxy = get_from_proxyrotator()
-    #         # print('URL :', url)
-    #         self.logger.info('Parse url : {}'.format(l.url))
-    #         self.logger.info('Proxy: {}'.format(proxy))
-    #         # time.sleep(5)
-    #         yield SplashRequest(
-    #             l.url, self.parse, endpoint='execute',
-    #             args={
-    #                 'lua_source': DE_SHIPPING, 'proxy': proxy, 'images': 0, 'timeout': 90, 'wait': 2
-    #             },
-    #         )
-
-    #     pagination_links = response.css('#pagn.pagnHy span.pagnLink a::attr(href)')
-    #     if pagination_links:
-    #         for l in pagination_links:
-    #             yield response.follow(l, self.parse_result)
-
     def start_requests(self):
-        start_urls = ['https://www.amazon.de/s?marketplaceID=A1PA6795UKMFR9&me=A3C99XFET32HI1&merchant=A3C99XFET32HI1&redirect=true']
-        for url in start_urls:
+        # start_urls = []
+        # for url in start_urls:
             yield scrapy.Request(
-                url, self.parse_result,
+                DE_INIT_URL, self.parse_result,
                 headers=DE_HEADERS, meta={'dont_merge_cookies': True}
             )
 
     def parse_result(self, response):
-        # links_amount = len(self.lx_products.extract_links(response))
         for l in self.lx_products.extract_links(response):
             self.logger.info('Parse url : {}'.format(l.url))
             yield scrapy.Request(
@@ -72,10 +40,6 @@ class AmazonDeSpider(scrapy.Spider):
                 headers=DE_HEADERS, meta={'proxy': get_from_proxyrotator(), 'dont_merge_cookies': True}
             )
 
-        # pagination_links = response.css('#pagn.pagnHy span.pagnLink a::attr(href)')
-        # if pagination_links:
-        #     for l in pagination_links:
-                # link = response.urljoin(l)
         next_page = response.css('#pagnNextLink.pagnNext::attr(href)').extract_first()
         if next_page is not None:
             yield response.follow(
